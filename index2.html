@@ -1,0 +1,65 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <script src="createjs-2015.05.21.min.js"></script>
+
+    <script>
+
+        var stage;
+
+        function init() {
+            stage = new createjs.Stage("myCanvas");
+
+            var initX = -50;
+            var initY = Math.random() * 450 >> 0;
+
+            var data = {
+                images: ["bricks.png"],
+                frames: { width: 52, height: 52 },
+                animations: {
+                    stand: Math.random() * 90 >> 0
+                }
+            };
+            var spriteSheet = new createjs.SpriteSheet(data);
+            var animation = new createjs.Sprite(spriteSheet, "stand");
+
+            animation.x = initX;
+            animation.y = initY;
+
+            //var square = new createjs.Shape();
+            //square.graphics.beginFill("#000000").drawRect(initX, initY, 50, 50);
+
+            createjs.Tween.get(animation, { loop: false }).to({ x: 150, y: initY }, 2000, createjs.Ease.backOut);
+
+            
+            //stage.addChild(square);
+
+            
+
+            stage.addChild(animation);
+            
+            createjs.Ticker.addEventListener("tick", tick);
+            //var ball = new createjs.Shape();
+            //ball.graphics.beginFill("#000000").drawRect(0, 0, 50, 50);
+
+
+            //createjs.Tween.get(ball, { loop: false }).to({ x: 450, y: 450 }, 3000).to({ x: 0 }, 3000).to({ y: 0 }, 3000);
+            //createjs.Ticker.addEventListener("tick", tick);
+
+
+        }
+
+        function tick(event) {
+            stage.update();
+        }
+
+    </script>
+</head>
+<body onload="init()">
+    <canvas id="myCanvas" width="500" height="500">
+        Alternate Content
+    </canvas>
+
+</body>
+</html>

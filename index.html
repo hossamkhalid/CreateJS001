@@ -1,0 +1,171 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <script src="createjs-2015.05.21.min.js"></script>
+
+    <script>
+
+        var stage;
+        var queue;
+
+        function init() {
+            stage = new createjs.Stage("myCanvas");
+
+            queue = new createjs.LoadQueue(false);
+            queue.addEventListener("complete", handleComplete);
+            queue.loadManifest(
+                [
+                    { id: "target", src: "target.png" },
+                    { id: "level", src: "levelsmall.png" },
+                    { id: "score", src: "score.png" },
+                    { id: "time_progress", src: "time_progress.png" },
+                    { id: "time", src: "time.png" }
+                ]);
+
+            var squares = [];
+
+            var i = 6;
+            var j = 6;
+            var counterX = 0;
+            var counterY = 0;
+
+            
+
+            
+
+            for (var k = 0; k < (i * j) ; k++) {
+
+                var index = 0;
+                while (true) {
+                    index = Math.floor(Math.random() * 90) + 1;
+                    if (index % 10 != 0) {
+                        break;
+                    }
+                }
+
+                var data = {
+                    images: ["bricks.png"],
+                    frames: { width: 52, height: 52, regX: 0, regY: 0 },
+                    animations: {
+                        stand: index
+                    }
+                };
+                
+                var spriteSheet = new createjs.SpriteSheet(data);
+                var animation = new createjs.Sprite(spriteSheet, "stand");
+                var square = new createjs.Shape();
+                
+
+                var initPositionX = getRandom();
+                var initPositionY = getRandom();
+
+                var red = Math.random() * 100 >> 0;
+                if (red < 10) { red = "0" + red; }
+                var green = Math.random() * 100 >> 0;
+                if (green < 10) { green = "0" + red; }
+                var blue = Math.random() * 100 >> 0;
+                if (blue < 10) { blue = "0" + red; }
+
+                //squares[k].x = counterX * 60;
+                //squares[k].y = counterY * 60;
+
+                animation.x = initPositionX;
+                animation.y = initPositionY;
+                animation.rotation = Math.floor(Math.random() * 360);
+
+                animation.addEventListener("click", handleClick);// = Math.floor(Math.random() * 360);
+
+                squares[k] = animation;
+
+                //squares[k].graphics.beginFill("#" + red + green + blue).drawRect(initPositionX, initPositionY, 50, 50);
+                //squares[k].graphics.moveTo((counterX * 60), (counterY * 60)) ;
+                createjs.Tween.get(squares[k], { loop: false }).to({ x: counterX * 52  , y: counterY * 52, rotation: 0 }, 2000, createjs.Ease.backOut);
+
+                
+                
+
+                //createjs.Tween.get(squares[k], { loop: false }).to({ x: (counterX * 60) - initPositionX, y: (counterY * 60) - initPositionY }, 2000, createjs.Ease.backOut);
+
+                //stage.addChild(squares[k]);
+                stage.addChild(animation);
+
+                
+
+                counterX++;
+
+                if (counterX > i - 1) {
+                    counterY++;
+                    counterX = 0;
+                }
+
+            }
+
+            createjs.Ticker.addEventListener("tick", tick);
+            //var ball = new createjs.Shape();
+            //ball.graphics.beginFill("#000000").drawRect(0, 0, 50, 50);
+
+
+            //createjs.Tween.get(ball, { loop: false }).to({ x: 450, y: 450 }, 3000).to({ x: 0 }, 3000).to({ y: 0 }, 3000);
+            //createjs.Ticker.addEventListener("tick", tick);
+
+            
+        }
+
+
+        function handleClick(event) {
+            alert("clicked");
+        }
+
+
+        function handleComplete(event) {
+            var target = new createjs.Bitmap(queue.getResult("target"));
+            target.x = 320;
+            target.y = 0;
+            stage.addChild(target);
+
+            var level = new createjs.Bitmap(queue.getResult("level"));
+            level.x = 360;
+            level.y = 160;
+            stage.addChild(level);
+
+            var score = new createjs.Bitmap(queue.getResult("score"));
+            score.x = 331;
+            score.y = 250;
+            stage.addChild(score);
+
+            var time_progress = new createjs.Bitmap(queue.getResult("time_progress"));
+            time_progress.x = 345;
+            time_progress.y = 325;
+            stage.addChild(time_progress);
+            createjs.Tween.get(time_progress, { loop: false }).to({ scaleX: 0 }, 20000);
+
+            var time = new createjs.Bitmap(queue.getResult("time"));
+            time.x = 331;
+            time.y = 310;
+            stage.addChild(time);
+        }
+
+        function tick(event) {
+            stage.update();
+        }
+
+        function getRandom() {
+            while (true) {
+                var num = Math.floor(Math.random() * 1000); // this will get a number between 1 and 99;
+                num *= Math.floor(Math.random() * 2) == 1 ? 1 : -1; // this will add minus sign in 50% of cases
+                if (num < -50 || num >= 550) {
+                    return num;
+                }
+            }            
+        }
+
+    </script>
+</head>
+<body onload="init()" style="background-image:url('fondo1.png'); background-repeat: repeat-x; background-position-y:bottom">
+    <canvas id="myCanvas" width="500" height="700">
+        Alternate Content
+    </canvas>
+
+</body>
+</html>
